@@ -2,6 +2,8 @@
 
 Sistema para coleta e consulta de dados dos cursos de graduação da USP através do Jupiter Web.
 
+(Projeto final da disciplina SSC0103 - Programação Orientada a Objetos)
+
 ## Instalação
 
 ### Dependências Necessárias
