@@ -9,7 +9,7 @@ Sistema para coleta e consulta de dados dos cursos de graduação da USP atravé
 ### Dependências Necessárias
 **ATENÇÃO:** esse projeto usa **python 3**!
 
-Execute o comando:
+Estando no mesmo diretório que requirements.txt, execute o seguinte comando:
 
 ```bash
 pip install -r requirements.txt
