@@ -12,20 +12,17 @@ class SistemaJupiter:
         self.cursos = {}    # nome -> objeto Curso 
         self.disciplinas = {} # codigo -> objeto Disciplina
     
-    def processar_todas_grades(self):
-        arquivos_html = glob.glob("grades/*.html")
-        for i in tqdm(range(len(arquivos_html)),bar_format="{l_bar}{bar:20}", desc="Processando grades curriculares", ncols=60):
-            arquivo = arquivos_html[i]
-            try:
-                self.processar_grade(arquivo)
-            except Exception as e:
-                print(f"Erro ao processar {arquivo}: {e}")
     
-    def processar_grade(self, arquivo_html):
-        """Processa um arquivo HTML específico"""
-
-        with open(arquivo_html, encoding='utf-8') as fp:
-            grade = BeautifulSoup(fp, features="lxml")
+    def processar_grade(self, conteudo_html):
+        """Processa conteúdo HTML diretamente ou arquivo"""
+        
+        if conteudo_html.endswith('.html'):
+            # É um caminho de arquivo
+            with open(conteudo_html, encoding='utf-8') as fp:
+                grade = BeautifulSoup(fp, features="lxml")
+        else:
+            # É conteúdo HTML direto
+            grade = BeautifulSoup(conteudo_html, features="lxml")
         
         # Extrair informações básicas do curso
         try:
@@ -112,20 +109,25 @@ class SistemaJupiter:
         """2. Dados de um determinado curso"""
         print("\nEscolha um curso:\n")
         i = 1
-        for curso in self.cursos:
+        for curso in sorted(self.cursos):
             print(f"{i}) {curso}")
             i += 1
         nome_curso = input("\nDigite o número do curso: ")
-        nome_curso = list(self.cursos.keys())[int(nome_curso) - 1]
+        nome_curso = list(sorted(self.cursos.keys()))[int(nome_curso) - 1]
         self.cursos[nome_curso].__str__()
         return self.cursos[nome_curso]
     
     def dados_todos_cursos(self):
         """3. Dados de todos os cursos"""
-        print("Dados de todos os cursos:\n")
-        for curso in self.cursos.values():
-            print(curso.__str__())
-            print("\n")
+        # print("Dados de todos os cursos:\n")
+        # for curso in self.cursos.values():
+        #     print(curso.__str__())
+        #     print("\n")
+
+        for unidade in self.unidades:
+            print(f"\n----- Cursos ministrados em {unidade} -----\n\n")
+            for curso in self.unidades[unidade].cursos:
+                print(f"{curso.__str__()}\n")
                
     def dados_disciplina(self):
         """4. Dados de uma disciplina, inclusive quais cursos ela faz parte"""
@@ -158,6 +160,7 @@ class SistemaJupiter:
         }
     
     def buscar_disciplina_por_nome(self, nome_parcial):
+
         """Consulta adicional: buscar disciplina por nome parcial"""
         resultados = []
         nome_parcial = nome_parcial.lower()
@@ -165,3 +168,12 @@ class SistemaJupiter:
             if nome_parcial in disc.nome.lower():
                 resultados.append(disc)
         return resultados 
+    
+    def buscar_curso_por_nome(self, nome_parcial):
+        """Consulta adicional: buscar curso por nome parcial"""
+        resultados = []
+        nome_parcial = nome_parcial.lower()
+        for curso in self.cursos.values():
+            if nome_parcial in curso.nome.lower():
+                resultados.append(curso)
+        return resultados

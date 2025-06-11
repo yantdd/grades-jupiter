@@ -1,40 +1,55 @@
+import sys
+
 from modelos.sistema_jupiter import SistemaJupiter
+from scraper import scraper
+
 
 def exibir_menu():
     """Exibe o menu principal formatado como uma caixa ASCII"""
-    print("\n" + "+" + "-" * 48 + "+")
-    print("|" + "MENU DE CONSULTAS".center(48) + "|")
-    print("+" + "-" * 48 + "+")
-    print("| 1. Listar cursos por unidade".ljust(49) + "|")
-    print("| 2. Dados de um curso específico".ljust(49) + "|")
-    print("| 3. Dados de todos os cursos".ljust(49) + "|")
-    print("| 4. Dados de uma disciplina".ljust(49) + "|")
-    print("| 5. Disciplinas em múltiplos cursos".ljust(49) + "|")
-    print("| 6. Estatísticas gerais".ljust(49) + "|")
-    print("| 7. Buscar disciplina por nome".ljust(49) + "|")
-    print("|".ljust(49) + "|")
-    print("| 0. Sair".ljust(49) + "|")
-    print("+" + "-" * 48 + "+")
+    print("\n" + "+" + "-" * 45 + "+")
+    print("|" + "MENU DE CONSULTAS".center(45) + "|")
+    print("+" + "-" * 45 + "+")
+    print("| 1. Listar cursos por unidade".ljust(46) + "|")
+    print("| 2. Dados de um curso específico".ljust(46) + "|")
+    print("| 3. Dados de todos os cursos".ljust(46) + "|")
+    print("| 4. Dados de uma disciplina".ljust(46) + "|")
+    print("| 5. Disciplinas em múltiplos cursos".ljust(46) + "|")
+    print("| 6. Estatísticas gerais".ljust(46) + "|")
+    print("| 7. Buscar disciplina por nome".ljust(46) + "|")
+    print("| 8. Buscar curso por nome".ljust(46) + "|")
+    print("|".ljust(46) + "|")
+    print("| 0. Sair".ljust(46) + "|")
+    print("+" + "-" * 45 + "+")
 
+
+def exibe_banner():
+    banner = f"""
+        ____               _             
+       / ___|_ __ __ _  __| | ___  ___   
+      | |  _| '__/ _` |/ _` |/ _ \/ __|  
+      | |_| | | | (_| | (_| |  __/\__ \  
+       \____|_|  \__,_|\__,_|\___||___/  
+          | |_   _ _ __ (_) |_ ___ _ __  
+       _  | | | | | '_ \| | __/ _ \ '__| 
+      | |_| | |_| | |_) | | ||  __/ |    
+       \___/ \__,_| .__/|_|\__\___|_|    
+                  |_|                    \n"""
+    print(banner)
 
 def main():
-    banner = f"""
-   ____               _             
-  / ___|_ __ __ _  __| | ___  ___   
- | |  _| '__/ _` |/ _` |/ _ \/ __|  
- | |_| | | | (_| | (_| |  __/\__ \  
-  \____|_|  \__,_|\__,_|\___||___/  
-     | |_   _ _ __ (_) |_ ___ _ __  
-  _  | | | | | '_ \| | __/ _ \ '__| 
- | |_| | |_| | |_) | | ||  __/ |    
-  \___/ \__,_| .__/|_|\__\___|_|    
-             |_|                    \n"""
     
     sistema = SistemaJupiter()
-    sistema.processar_todas_grades()
-    
-    print(banner)
-    
+
+    if len(sys.argv) > 1:
+        exibe_banner()
+        if scraper(int(sys.argv[1]), sistema) == 1:
+            return
+
+    else:
+        print("Uso: python3 interface.py <numero_de_unidades>")
+        return
+        
+
     while True:
         exibir_menu()
         
@@ -91,6 +106,16 @@ def main():
                     print(f"{i+1:2d}. {disc.codigo} - {disc.nome}")
             else:
                 print("Nenhuma disciplina encontrada!")
+        
+        elif opcao == "8":
+            nome_parcial = input("Digite parte do nome do curso: ")
+            cursos = sistema.buscar_curso_por_nome(nome_parcial)
+            if cursos:
+                print(f"\n----- RESULTADOS DA BUSCA ({len(cursos)}) -----\n")
+                for i, curso in enumerate(cursos):
+                    print(f"{curso.__str__()}\n")
+            else:
+                print("Nenhum curso encontrado!")
         
         elif opcao == "0":
             print("Encerrando sistema...")
