@@ -1,5 +1,10 @@
 # Sistema de Consulta Grades Jupiter
 
+Autores:
+- Yan Trindade Meireles 13680035
+- Lucas Dúckur Nunes Andreolli 15471518
+- Rafael Perez Carmanhani 15485420
+  
 Sistema para coleta e consulta de dados dos cursos de graduação da USP através do Jupiter Web.
 
 (Projeto final da disciplina SSC0103 - Programação Orientada a Objetos)
